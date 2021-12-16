@@ -13,7 +13,14 @@ public class Tabuleiro {
     //Botei para inserir em ambos tabuleiros de forma aleatória.
     public void inserirNaviosTabuleiro(){
         tabuleiroPC = alocarNaviosTabuleiro();
-        tabuleiroJogador = alocarNaviosTabuleiro();
+        System.out.print(this.nomeJogador + " deseja que aloquemos pra você as peças no tabuleiro? (S|N)");
+        char opcao = Character.toUpperCase(sc.next().charAt(0));
+        if(opcao=='S'){
+            tabuleiroJogador = alocarNaviosTabuleiro();
+        }else { //Implementar lógica para escolha pelo próprio jogador do posicionamento das peças.
+            System.out.println("Implementar lógica...");
+        }
+
     }
 
     public void obterNomeJogador(){
@@ -92,7 +99,7 @@ public class Tabuleiro {
             y=0;
             for(int[] linha : novoTabuleiro){
                 for(int coluna : linha){
-                    if(numeroAleatorio.nextInt(100)<=10){
+                    if(numeroAleatorio.nextInt(100)<=10){//Aplicado uma probabilidade de 10% pra escolher a linha.
                         //0 refere-se ao campo em branco, sem navios;
                         if(coluna==0){
                             //1 refere-se ao campo que possui navio.
@@ -114,5 +121,34 @@ public class Tabuleiro {
             }
         }
         return novoTabuleiro;
+    }
+
+    public void realizarAtaque(){
+        System.out.print("Favor informar posição para ataque: (Ex.: A03)");
+        String posicaoAtacada = sc.next();
+        boolean posicaoOK = verificarEstruturaPosicao(posicaoAtacada);
+        while(!posicaoOK){
+            System.out.print("Favor informar posição válida (A - J) e (01 - 10): ");
+            posicaoAtacada = sc.next();
+            posicaoOK = verificarEstruturaPosicao(posicaoAtacada);
+        }
+        char posicaoColunaCaracter = posicaoAtacada.toLowerCase().charAt(0);
+        int posicaoColuna = posicaoColunaCaracter - 97; //O caracter 'a' é um inteiro 97, então subtraindo trago para minha posição 0.
+        int posicaoLinha = Integer.parseInt(posicaoAtacada.substring(1)) - 1; //Tirando 1 porque a matriz começa no 0.
+    }
+
+    public boolean verificarEstruturaPosicao(String posicao){
+        char posicaoColunaCaracter = posicao.toLowerCase().charAt(0);
+        int posicaoColuna = posicaoColunaCaracter - 97;
+        int posicaoLinha = Integer.parseInt(posicao.substring(1));
+
+        //Validando caso o jogador escolha posição além do j e além do 10, pois nossa matriz é 10x10.
+        if(posicaoColuna>10){
+            return false;
+        }else if(posicaoLinha>10){
+            return false;
+        }
+       String regexVerificacao = "^[A-Za-z]{1}[0-9]{2}$";
+       return posicao.matches(regexVerificacao);
     }
 }

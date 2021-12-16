@@ -8,5 +8,6 @@ public class Main {
         tabuleiro.obterNomeJogador();
         tabuleiro.inserirNaviosTabuleiro();
         tabuleiro.raizPrintTabuleiro();
+        tabuleiro.realizarAtaque();
     }
 }

@@ -21,20 +21,15 @@ public class Jogadas {
         Random numeroAleatorio = new Random();
         int x= 0, y= 0;
 
-        while (qtdeRestanteNavios>0){
+        while (qtdeRestanteNavios > 0){
             x=0;
             y=0;
             for(int[] linha : novoTabuleiro){
                 for(int coluna : linha){
-                    if(numeroAleatorio.nextInt(100)<=10){//Aplicado uma probabilidade de 10% pra escolher a linha.
-                        //0 refere-se ao campo em branco, sem navios;
+                    if(numeroAleatorio.nextInt(100)<=10){
                         if(coluna==0){
-                            //1 refere-se ao campo que possui navio.
                             novoTabuleiro[x][y] = 1;
                             qtdeRestanteNavios--;
-                            break;
-                        }
-                        if(qtdeRestanteNavios<=0){
                             break;
                         }
                     }
@@ -49,7 +44,7 @@ public class Jogadas {
         }
         return new Tabuleiro(novoTabuleiro);
     }
-    //Botei para inserir em ambos tabuleiros de forma aleatória.
+
     public void inserirNaviosTabuleiro(Jogador jogador){
         if (jogador.isBot()){
             jogador.getTabuleiro().setMatriz(alocarNaviosAleatoriamente(jogador.getQtdeMaximaDeNavios()));
@@ -79,7 +74,7 @@ public class Jogadas {
         char posicaoColunaCaracter = pos.toLowerCase().charAt(0);
         int posicaoColuna = posicaoColunaCaracter - 97; //O caracter 'a' é um inteiro 97, então subtraindo trago para minha posição 0.
         int posicaoLinha = Integer.parseInt(pos.substring(1)) - 1; //Tirando 1 porque a matriz começa no 0.
-        return new int[]{posicaoColuna, posicaoLinha};
+        return new int[]{posicaoLinha, posicaoColuna};
     }
 
     public boolean verificarEstruturaPosicao(String posicao){
@@ -97,25 +92,22 @@ public class Jogadas {
         return posicao.matches(regexVerificacao);
     }
 
-    public void atacaNaPosicao(int posX, int posY, Jogador jogador){
-        int[][] tabuleiro = jogador.getTabuleiro().getMatriz();
-        if(tabuleiro[posX][posY] == 1) tabuleiro[posX][posY] = 3;
-        else if(tabuleiro[posX][posY]==0) tabuleiro[posX][posY] = 2;
+    public void atacaNaPosicao(int posX, int posY, Jogador jogador, Jogador pc){
+        int[][] tabuleiroJogador = jogador.getTabuleiro().getMatriz();
+        int[][] tabuleiroPC = pc.getTabuleiro().getMatriz();
+        if(tabuleiroPC[posX][posY] != 0 && tabuleiroPC[posX][posY] != 2 && tabuleiroPC[posX][posY] != 3) {
+            if (tabuleiroJogador[posX][posY] == 1) tabuleiroJogador[posX][posY] = 4;
+            else tabuleiroJogador[posX][posY] = 3;
+        }
+        else if(tabuleiroPC[posX][posY] == 0 || tabuleiroPC[posX][posY] == 2 || tabuleiroPC[posX][posY] == 3) {
+            if (tabuleiroJogador[posX][posY] == 1) tabuleiroJogador[posX][posY] = 5;
+            else tabuleiroJogador[posX][posY] = 2;
+        }
     }
 
-    public void realizarAtaque(Jogador jogador){
-        System.out.print("Favor informar posição para ataque: (Ex.: A03)");
-        String posicaoAtacada = sc.next();
-        boolean posicaoOK = verificarEstruturaPosicao(posicaoAtacada);
-        while(!posicaoOK){
-            System.out.print("Favor informar posição válida (A - J) e (01 - 10): ");
-            posicaoAtacada = sc.next();
-            posicaoOK = verificarEstruturaPosicao(posicaoAtacada);
-        }
-        char posicaoColunaCaracter = posicaoAtacada.toLowerCase().charAt(0);
-        int posicaoColuna = posicaoColunaCaracter - 97; //O caracter 'a' é um inteiro 97, então subtraindo trago para minha posição 0.
-        int posicaoLinha = Integer.parseInt(posicaoAtacada.substring(1)) - 1; //Tirando 1 porque a matriz começa no 0.
-        atacaNaPosicao(posicaoLinha, posicaoColuna, jogador);
+    public void realizarAtaque(Jogador jogador, Jogador pc){
+        int[] pos =  recebePosicao("Favor informar posição para ataque: (Ex.: A03)");
+        atacaNaPosicao(pos[0], pos[1], jogador, pc);
     }
 
     public void exibirInidiceColunas(){

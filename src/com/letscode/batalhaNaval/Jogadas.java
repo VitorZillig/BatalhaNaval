@@ -19,7 +19,7 @@ public class Jogadas {
         int qtdeRestanteNavios = qtdeMaximaDeNavios;
         int [][] novoTabuleiro = new int[10][10];
         Random numeroAleatorio = new Random();
-        int x= 0, y= 0;
+        int x, y;
 
         while (qtdeRestanteNavios > 0){
             x=0;
@@ -72,24 +72,26 @@ public class Jogadas {
             posicaoOK = verificarEstruturaPosicao(pos);
         }
         char posicaoColunaCaracter = pos.toLowerCase().charAt(0);
-        int posicaoColuna = posicaoColunaCaracter - 97; //O caracter 'a' é um inteiro 97, então subtraindo trago para minha posição 0.
-        int posicaoLinha = Integer.parseInt(pos.substring(1)) - 1; //Tirando 1 porque a matriz começa no 0.
+        int posicaoColuna = posicaoColunaCaracter - 97;
+        int posicaoLinha = Integer.parseInt(pos.substring(1)) - 1;
         return new int[]{posicaoLinha, posicaoColuna};
     }
 
     public boolean verificarEstruturaPosicao(String posicao){
-        char posicaoColunaCaracter = posicao.toLowerCase().charAt(0);
-        int posicaoColuna = posicaoColunaCaracter - 97;
-        int posicaoLinha = Integer.parseInt(posicao.substring(1));
-
-        //Validando caso o jogador escolha posição além do j e além do 10, pois nossa matriz é 10x10.
-        if(posicaoColuna>10){
-            return false;
-        }else if(posicaoLinha>10){
+        try {
+            char posicaoColunaCaracter = posicao.toLowerCase().charAt(0);
+            int posicaoColuna = posicaoColunaCaracter - 97; // 97 é o código do char "a".
+            int posicaoLinha = Integer.parseInt(posicao.substring(1));
+            if(posicaoColuna>10){
+                return false;
+            }else if(posicaoLinha>10){
+                return false;
+            }
+            String regexVerificacao = "^[A-Za-z][0-9]{2}$";
+            return posicao.matches(regexVerificacao);
+        } catch (Exception e){
             return false;
         }
-        String regexVerificacao = "^[A-Za-z]{1}[0-9]{2}$";
-        return posicao.matches(regexVerificacao);
     }
 
     public void atacaNaPosicao(int posX, int posY, Jogador jogador, Jogador pc){
@@ -98,24 +100,33 @@ public class Jogadas {
         if(tabuleiroPC[posX][posY] != 0 && tabuleiroPC[posX][posY] != 2 && tabuleiroPC[posX][posY] != 3) {
             if (tabuleiroJogador[posX][posY] == 1) tabuleiroJogador[posX][posY] = 4;
             else tabuleiroJogador[posX][posY] = 3;
+            System.out.println("*** Acertou o tiro! :D ***");
         }
         else if(tabuleiroPC[posX][posY] == 0 || tabuleiroPC[posX][posY] == 2 || tabuleiroPC[posX][posY] == 3) {
             if (tabuleiroJogador[posX][posY] == 1) tabuleiroJogador[posX][posY] = 5;
             else tabuleiroJogador[posX][posY] = 2;
+            System.out.println("--- Errou o tiro :( ---");
         }
     }
 
     public void realizarAtaque(Jogador jogador, Jogador pc){
         int[] pos =  recebePosicao("Favor informar posição para ataque: (Ex.: A03)");
+        int[][] tabuleiroJogador = jogador.getTabuleiro().getMatriz();
+        boolean flag = tabuleiroJogador[pos[0]][pos[1]] != 0 && tabuleiroJogador[pos[0]][pos[1]] != 1;
+        while (flag){
+            System.out.println("Favor escolha uma posição não selecionada anteriormente!");
+            pos = recebePosicao("Favor informar posição para ataque: (Ex.: A03)");
+            flag = tabuleiroJogador[pos[0]][pos[1]] != 0 && tabuleiroJogador[pos[0]][pos[1]] != 1;
+        }
         atacaNaPosicao(pos[0], pos[1], jogador, pc);
     }
 
     public void exibirInidiceColunas(){
         //65 é o código do char "A".
         char letraColuna = 65;
-        String letraCabecalho = "   | ";
+        StringBuilder letraCabecalho = new StringBuilder("   | ");
         for(int i = 0; i < 10; i++){
-            letraCabecalho += (letraColuna++) + " | ";
+            letraCabecalho.append(letraColuna++).append(" | ");
         }
         System.out.println(letraCabecalho);
     }
@@ -127,35 +138,34 @@ public class Jogadas {
         System.out.println("--------------------------------------------");
 
         exibirInidiceColunas();
-        //Montando as linhas
-        String linhaTabuleiro = "";
+        StringBuilder linhaTabuleiro;
         int numeroLinha = 1;
         for(int[] linha : tabuleiroRecebido.getMatriz()){
             if(numeroLinha<10){
-                linhaTabuleiro = (numeroLinha++) + "  |";
+                linhaTabuleiro = new StringBuilder((numeroLinha++) + "  |");
             }else {
-                linhaTabuleiro = (numeroLinha++) + " |";
+                linhaTabuleiro = new StringBuilder((numeroLinha++) + " |");
             }
 
             for(int coluna : linha){
                 switch (coluna){
                     case 0: //Vazio
-                        linhaTabuleiro += "   |";
+                        linhaTabuleiro.append("   |");
                         break;
                     case 1: //Navio
-                        linhaTabuleiro += " N |";
+                        linhaTabuleiro.append(" N |");
                         break;
                     case 2: //Errou o tiro
-                        linhaTabuleiro += " - |";
+                        linhaTabuleiro.append(" - |");
                         break;
                     case 3: //Acertou
-                        linhaTabuleiro += " * |";
+                        linhaTabuleiro.append(" * |");
                         break;
                     case 4: //Tiro certeiro com navio posicionado
-                        linhaTabuleiro += " X |";
+                        linhaTabuleiro.append(" X |");
                         break;
                     case 5: //Tiro na água com navio posicionado
-                        linhaTabuleiro += " n |";
+                        linhaTabuleiro.append(" n |");
                         break;
                 }
             }

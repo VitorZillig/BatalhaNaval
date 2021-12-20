@@ -8,12 +8,13 @@ public class Main {
     public static void main(String[] args) {
         int[][] matriz = new int[10][10];
         Jogadas jogadas = new Jogadas();
-        Tabuleiro tabuleiroJogador = new Tabuleiro(matriz);
-        Tabuleiro tabuleiroPC = new Tabuleiro(matriz);
-        Jogador jogador = new Jogador(tabuleiroJogador,10,jogadas.obterNomeJogador());
+        Jogador jogador = new Jogador(matriz,10,jogadas.obterNomeJogador(),false);
+        Jogador PC = new Jogador(matriz, 10, "Computador", true);
 
-        jogadas.inserirNaviosTabuleiro(tabuleiroPC,tabuleiroJogador,jogador.getQtdeMaximaDeNavios(),jogador);
-        jogadas.raizPrintTabuleiro(jogador.getNome(),tabuleiroJogador,"Computador",tabuleiroPC);
-        jogadas.realizarAtaque();
+        jogadas.inserirNaviosTabuleiro(jogador);
+        jogadas.inserirNaviosTabuleiro(PC);
+        jogadas.raizPrintTabuleiro(jogador.getNome(),jogador.getTabuleiro(),"Computador",PC.getTabuleiro());
+        jogadas.realizarAtaque(jogador);
+        jogadas.printTabuleiro(jogador.getNome(),jogador.getTabuleiro());
     }
 }

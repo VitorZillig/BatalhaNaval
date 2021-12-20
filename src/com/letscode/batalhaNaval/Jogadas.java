@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class Jogadas {
     Scanner sc = new Scanner(System.in);
+
     public String obterNomeJogador(){
         String nomeJogador;
         System.out.print("Informe seu nome: ");
@@ -14,7 +15,7 @@ public class Jogadas {
         return nomeJogador;
     }
 
-    public Tabuleiro alocarNaviosTabuleiro(int qtdeMaximaDeNavios){
+    public Tabuleiro alocarNaviosAleatoriamente(int qtdeMaximaDeNavios){
         int qtdeRestanteNavios = qtdeMaximaDeNavios;
         int [][] novoTabuleiro = new int[10][10];
         Random numeroAleatorio = new Random();
@@ -46,21 +47,41 @@ public class Jogadas {
                 }
             }
         }
-        Tabuleiro tabuleiro = new Tabuleiro(novoTabuleiro);
-        return tabuleiro;
+        return new Tabuleiro(novoTabuleiro);
     }
     //Botei para inserir em ambos tabuleiros de forma aleatória.
-    public void inserirNaviosTabuleiro(Tabuleiro tabuleiroPC, Tabuleiro tabuleiroJogador,int qtdeMaximaDeNavios,Jogador jogador){
-        tabuleiroPC.setMatriz(alocarNaviosTabuleiro(qtdeMaximaDeNavios));
-        System.out.print(jogador.getNome() + " deseja que aloquemos pra você as peças no tabuleiro? (S|N)");
-        char opcao = Character.toUpperCase(sc.next().charAt(0));
-        if(opcao=='S'){
-            tabuleiroJogador.setMatriz(alocarNaviosTabuleiro(qtdeMaximaDeNavios));
-        }else { //Implementar lógica para escolha pelo próprio jogador do posicionamento das peças.
-            System.out.println("Implementar lógica...");
+    public void inserirNaviosTabuleiro(Jogador jogador){
+        if (jogador.isBot()){
+            jogador.getTabuleiro().setMatriz(alocarNaviosAleatoriamente(jogador.getQtdeMaximaDeNavios()));
+        } else {
+            System.out.print(jogador.getNome() + " deseja que aloquemos pra você as peças no tabuleiro? (S|N)");
+            char opcao = Character.toUpperCase(sc.next().charAt(0));
+            if(opcao=='S'){
+                jogador.getTabuleiro().setMatriz(alocarNaviosAleatoriamente(jogador.getQtdeMaximaDeNavios()));
+            }else {
+                for (int i=0; i<jogador.getQtdeMaximaDeNavios(); i++){
+                    int[] posicao = recebePosicao("Favor informar posição para o " + i+1 + "º navio: (Ex.: A03)");
+                    jogador.getTabuleiro().getMatriz()[posicao[0]][posicao[1]] = 1;
+                }
+            }
         }
-
     }
+
+    private int[] recebePosicao(String text){
+        System.out.print(text);
+        String pos = sc.next();
+        boolean posicaoOK = verificarEstruturaPosicao(pos);
+        while(!posicaoOK){
+            System.out.print("Favor informar posição válida (A - J) e (01 - 10): ");
+            pos = sc.next();
+            posicaoOK = verificarEstruturaPosicao(pos);
+        }
+        char posicaoColunaCaracter = pos.toLowerCase().charAt(0);
+        int posicaoColuna = posicaoColunaCaracter - 97; //O caracter 'a' é um inteiro 97, então subtraindo trago para minha posição 0.
+        int posicaoLinha = Integer.parseInt(pos.substring(1)) - 1; //Tirando 1 porque a matriz começa no 0.
+        return new int[]{posicaoColuna, posicaoLinha};
+    }
+
     public boolean verificarEstruturaPosicao(String posicao){
         char posicaoColunaCaracter = posicao.toLowerCase().charAt(0);
         int posicaoColuna = posicaoColunaCaracter - 97;
@@ -76,7 +97,13 @@ public class Jogadas {
         return posicao.matches(regexVerificacao);
     }
 
-    public void realizarAtaque(){
+    public void atacaNaPosicao(int posX, int posY, Jogador jogador){
+        int[][] tabuleiro = jogador.getTabuleiro().getMatriz();
+        if(tabuleiro[posX][posY] == 1) tabuleiro[posX][posY] = 3;
+        else if(tabuleiro[posX][posY]==0) tabuleiro[posX][posY] = 2;
+    }
+
+    public void realizarAtaque(Jogador jogador){
         System.out.print("Favor informar posição para ataque: (Ex.: A03)");
         String posicaoAtacada = sc.next();
         boolean posicaoOK = verificarEstruturaPosicao(posicaoAtacada);
@@ -88,6 +115,7 @@ public class Jogadas {
         char posicaoColunaCaracter = posicaoAtacada.toLowerCase().charAt(0);
         int posicaoColuna = posicaoColunaCaracter - 97; //O caracter 'a' é um inteiro 97, então subtraindo trago para minha posição 0.
         int posicaoLinha = Integer.parseInt(posicaoAtacada.substring(1)) - 1; //Tirando 1 porque a matriz começa no 0.
+        atacaNaPosicao(posicaoLinha, posicaoColuna, jogador);
     }
 
     public void exibirInidiceColunas(){

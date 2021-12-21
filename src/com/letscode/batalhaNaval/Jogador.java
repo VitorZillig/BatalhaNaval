@@ -6,12 +6,14 @@ public class Jogador {
     private String nome;
     private Tabuleiro tabuleiro;
     private int qtdeMaximaDeNavios;
-    private boolean isBot = false;
+    private int naviosRestantes;
+    private boolean isBot;
 
     public Jogador(int[][] matriz, int qtdeMaximaDeNavios, String nome, boolean isBot) {
         this.nome = nome;
         this.tabuleiro = new Tabuleiro(matriz);
         this.qtdeMaximaDeNavios = qtdeMaximaDeNavios;
+        this.naviosRestantes = qtdeMaximaDeNavios;
         this.isBot = isBot;
     }
 
@@ -31,13 +33,15 @@ public class Jogador {
         this.tabuleiro = tabuleiro;
     }
 
-    public int getQtdeMaximaDeNavios() {
-        return qtdeMaximaDeNavios;
-    }
+    public int getQtdeMaximaDeNavios() { return qtdeMaximaDeNavios; }
 
     public void setQtdeMaximaDeNavios(int qtdeMaximaDeNavios) {
         this.qtdeMaximaDeNavios = qtdeMaximaDeNavios;
     }
+
+    public int getNaviosRestantes() { return naviosRestantes; }
+
+    public void setNaviosRestantes(int naviosRestantes) { this.naviosRestantes = naviosRestantes; }
 
     public boolean isBot() {
         return isBot;

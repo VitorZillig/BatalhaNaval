@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class Jogadas {
     Scanner sc = new Scanner(System.in);
+    private boolean turno = true;
 
     public String obterNomeJogador(){
         String nomeJogador;
@@ -14,6 +15,8 @@ public class Jogadas {
         nomeJogador = sc.nextLine();
         return nomeJogador;
     }
+
+    public boolean getTurno(){ return this.turno; }
 
     public Tabuleiro alocarNaviosAleatoriamente(int qtdeMaximaDeNavios){
         int qtdeRestanteNavios = qtdeMaximaDeNavios;
@@ -82,7 +85,7 @@ public class Jogadas {
             char posicaoColunaCaracter = posicao.toLowerCase().charAt(0);
             int posicaoColuna = posicaoColunaCaracter - 97; // 97 é o código do char "a".
             int posicaoLinha = Integer.parseInt(posicao.substring(1));
-            if(posicaoColuna>10){
+            if(posicaoColuna >= 10){
                 return false;
             }else if(posicaoLinha>10){
                 return false;
@@ -94,36 +97,61 @@ public class Jogadas {
         }
     }
 
-    public void atacaNaPosicao(int posX, int posY, Jogador jogador, Jogador pc){
+    public void atacaNaPosicao(int posX, int posY, Jogador jogador, Jogador jogador2){
         int[][] tabuleiroJogador = jogador.getTabuleiro().getMatriz();
-        int[][] tabuleiroPC = pc.getTabuleiro().getMatriz();
+        int[][] tabuleiroPC = jogador2.getTabuleiro().getMatriz();
         if(tabuleiroPC[posX][posY] != 0 && tabuleiroPC[posX][posY] != 2 && tabuleiroPC[posX][posY] != 3) {
             if (tabuleiroJogador[posX][posY] == 1) tabuleiroJogador[posX][posY] = 4;
             else tabuleiroJogador[posX][posY] = 3;
-            System.out.println("*** Acertou o tiro! :D ***");
+            jogador2.setNaviosRestantes(jogador2.getNaviosRestantes() - 1);
+            if (jogador.isBot()){
+                System.out.println("\n");
+                System.out.println("********* O bot acertou o tiro :X! *********");
+            }else{
+                System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                System.out.println("********** Você acertou o tiro! :D *********");
+            }
         }
         else if(tabuleiroPC[posX][posY] == 0 || tabuleiroPC[posX][posY] == 2 || tabuleiroPC[posX][posY] == 3) {
             if (tabuleiroJogador[posX][posY] == 1) tabuleiroJogador[posX][posY] = 5;
             else tabuleiroJogador[posX][posY] = 2;
-            System.out.println("--- Errou o tiro :( ---");
+            if (jogador.isBot()){
+                System.out.println("\n");
+                System.out.println("********** O bot errou o tiro :D! **********");
+            }else{
+                System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                System.out.println("----------- Você Errou o tiro :( -----------");
+            }
         }
+        this.turno = !this.turno;
     }
 
-    public void realizarAtaque(Jogador jogador, Jogador pc){
-        int[] pos =  recebePosicao("Favor informar posição para ataque: (Ex.: A03)");
-        int[][] tabuleiroJogador = jogador.getTabuleiro().getMatriz();
-        boolean flag = tabuleiroJogador[pos[0]][pos[1]] != 0 && tabuleiroJogador[pos[0]][pos[1]] != 1;
-        while (flag){
-            System.out.println("Favor escolha uma posição não selecionada anteriormente!");
-            pos = recebePosicao("Favor informar posição para ataque: (Ex.: A03)");
-            flag = tabuleiroJogador[pos[0]][pos[1]] != 0 && tabuleiroJogador[pos[0]][pos[1]] != 1;
+    public void realizarAtaque(Jogador jogador, Jogador jogador2){
+        if (jogador.isBot()){
+            Random numeroAleatorio = new Random();
+            int linha = numeroAleatorio.nextInt(10);
+            int coluna = numeroAleatorio.nextInt(10);
+            int[][] tabuleiro = jogador.getTabuleiro().getMatriz();
+            while(tabuleiro[linha][coluna] != 0 && tabuleiro[linha][coluna] != 1){
+                linha = numeroAleatorio.nextInt(10);
+                coluna = numeroAleatorio.nextInt(10);
+            }
+            atacaNaPosicao(linha, coluna, jogador, jogador2);
+        }else {
+            int[] pos =  recebePosicao("Favor informar posição para ataque: (Ex.: A03)");
+            int[][] tabuleiroJogador = jogador.getTabuleiro().getMatriz();
+            boolean flag = tabuleiroJogador[pos[0]][pos[1]] != 0 && tabuleiroJogador[pos[0]][pos[1]] != 1;
+            while (flag){
+                System.out.println("Favor escolha uma posição não selecionada anteriormente!");
+                pos = recebePosicao("Favor informar posição para ataque: (Ex.: A03)");
+                flag = tabuleiroJogador[pos[0]][pos[1]] != 0 && tabuleiroJogador[pos[0]][pos[1]] != 1;
+            }
+            atacaNaPosicao(pos[0], pos[1], jogador, jogador2);
         }
-        atacaNaPosicao(pos[0], pos[1], jogador, pc);
     }
 
     public void exibirInidiceColunas(){
-        //65 é o código do char "A".
-        char letraColuna = 65;
+        char letraColuna = 65; //65 é o código do char "A".
         StringBuilder letraCabecalho = new StringBuilder("   | ");
         for(int i = 0; i < 10; i++){
             letraCabecalho.append(letraColuna++).append(" | ");
@@ -131,11 +159,29 @@ public class Jogadas {
         System.out.println(letraCabecalho);
     }
 
-    public void printTabuleiro(String nomeJogador, Tabuleiro tabuleiroRecebido){
+    public StringBuilder formater(String nomeJogador, String delimiter, boolean loser){
+        StringBuilder sb = new StringBuilder(44);
+        if (!loser) sb.append("WINNER ");
+        else sb.append(String.valueOf(delimiter).repeat(Math.max(0,7)));
+        sb.append(String.valueOf(delimiter).repeat(Math.max(0, (44 - sb.length()*2 - nomeJogador.length() - 2)/2)));
+        sb.append(" ").append(nomeJogador).append(" ");
+        sb.append(String.valueOf(delimiter).repeat(Math.max(0, (44 - sb.length()-7))));
+        if (!loser) sb.append(" WINNER");
+        else sb.append((String.valueOf(delimiter).repeat(Math.max(0,7))));
+        return sb;
+    }
 
-        System.out.println("--------------------------------------------");
-        System.out.println("                 " + nomeJogador + "     ");
-        System.out.println("--------------------------------------------");
+    public void printTabuleiro(String nomeJogador, Tabuleiro tabuleiroRecebido, boolean loser){
+
+        if (!loser){
+            System.out.println("********************************************");
+            System.out.println(formater(nomeJogador,"*",false));
+            System.out.println("********************************************");
+        } else {
+            System.out.println("--------------------------------------------");
+            System.out.println(formater(nomeJogador," ",true));
+            System.out.println("--------------------------------------------");
+        }
 
         exibirInidiceColunas();
         StringBuilder linhaTabuleiro;
@@ -146,7 +192,6 @@ public class Jogadas {
             }else {
                 linhaTabuleiro = new StringBuilder((numeroLinha++) + " |");
             }
-
             for(int coluna : linha){
                 switch (coluna){
                     case 0: //Vazio
@@ -173,9 +218,12 @@ public class Jogadas {
         }
     }
 
-    //Implantar a lógica aqui de printar o tabuleiro do PC apenas caso ele ganhe.
-    public void raizPrintTabuleiro(String nomeJogador,Tabuleiro tabuleiroJogador,String nomeJogador2, Tabuleiro tabuleiroPC){
-        printTabuleiro(nomeJogador, tabuleiroJogador);
-        printTabuleiro(nomeJogador2, tabuleiroPC);
+    public void raizPrintTabuleiro(Jogador jogador, Jogador jogador2){
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        if (jogador2.getNaviosRestantes() == 0 || jogador.getNaviosRestantes() == 0){
+            printTabuleiro(jogador.getNome(), jogador.getTabuleiro(), jogador.getNaviosRestantes() == 0);
+            System.out.println();
+            printTabuleiro(jogador2.getNome(), jogador2.getTabuleiro(), jogador2.getNaviosRestantes() == 0);
+        }else printTabuleiro(jogador.getNome(), jogador.getTabuleiro(), jogador.getNaviosRestantes() == 0);
     }
 }

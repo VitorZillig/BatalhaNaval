@@ -1,8 +1,7 @@
 package com.letscode;
 
 public class Tabuleiro {
-    int[][] matriz;
-
+    private int[][] matriz;
 
     public Tabuleiro(int matriz[][]){
         this.matriz = matriz;
@@ -15,6 +14,5 @@ public class Tabuleiro {
     public void setMatriz(Tabuleiro matriz) {
         this.matriz = matriz.getMatriz();
     }
-
 
 }

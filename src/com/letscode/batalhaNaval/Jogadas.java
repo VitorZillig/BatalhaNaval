@@ -58,7 +58,11 @@ public class Jogadas {
                 jogador.getTabuleiro().setMatriz(alocarNaviosAleatoriamente(jogador.getQtdeMaximaDeNavios()));
             }else {
                 for (int i=0; i<jogador.getQtdeMaximaDeNavios(); i++){
-                    int[] posicao = recebePosicao("Favor informar posição para o " + i+1 + "º navio: (Ex.: A03)");
+                    int[] posicao = recebePosicao("Favor informar posição para o " + (i+1) + "º navio: (Ex.: A03)");
+                    while(jogador.getTabuleiro().getMatriz()[posicao[0]][posicao[1]] == 1) {
+                        System.out.println("Favor escolher uma posição que não esteja ocupada.");
+                        posicao = recebePosicao("Favor informar posição para o " + (i+1) + "º navio: (Ex.: A03)");
+                    }
                     jogador.getTabuleiro().getMatriz()[posicao[0]][posicao[1]] = 1;
                 }
             }
@@ -219,11 +223,11 @@ public class Jogadas {
     }
 
     public void raizPrintTabuleiro(Jogador jogador, Jogador jogador2){
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         if (jogador2.getNaviosRestantes() == 0 || jogador.getNaviosRestantes() == 0){
+            System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             printTabuleiro(jogador.getNome(), jogador.getTabuleiro(), jogador.getNaviosRestantes() == 0);
             System.out.println();
             printTabuleiro(jogador2.getNome(), jogador2.getTabuleiro(), jogador2.getNaviosRestantes() == 0);
-        }else printTabuleiro(jogador.getNome(), jogador.getTabuleiro(), jogador.getNaviosRestantes() == 0);
+        }else printTabuleiro(jogador.getNome(), jogador.getTabuleiro(), true);
     }
 }

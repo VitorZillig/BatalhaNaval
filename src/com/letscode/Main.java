@@ -25,9 +25,9 @@ public class Main {
                 if (jogadas.getTurno()){
                     jogadas.realizarAtaque(jogador, pc);
                     jogadas.raizPrintTabuleiro(jogador,pc);
-                    jogadas.contarNaviosRestantes(jogador);
                 } else {
                     jogadas.realizarAtaque(pc, jogador);
+                    jogadas.contarNaviosRestantes(jogador);
                 }
             }
             jogadas.raizPrintTabuleiro(jogador,pc);

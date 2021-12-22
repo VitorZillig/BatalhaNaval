@@ -224,7 +224,7 @@ public class Jogadas {
 
     public void contarNaviosRestantes(Jogador jogador){
         System.out.println();
-        System.out.println("O adversário acertou "+(jogador.getQtdeMaximaDeNavios()-jogador.getNaviosRestantes())+" navios seus!");
+        System.out.println("**** O adversário acertou "+(jogador.getQtdeMaximaDeNavios()-jogador.getNaviosRestantes())+" navios seus!****");
     }
 
     public void raizPrintTabuleiro(Jogador jogador, Jogador jogador2){

@@ -15,7 +15,7 @@ public class Main {
         boolean partida = true;
         while(partida){
             Jogadas jogadas = new Jogadas();
-            Jogador jogador = new Jogador(matriz,10,jogadas.obterNomeJogador(),false);
+            Jogador jogador = new Jogador(matriz,10,jogadas.obterNomeJogador(),true);
             Jogador pc = new Jogador(matriz, 10, "Computador", true);
             jogadas.inserirNaviosTabuleiro(jogador);
             jogadas.inserirNaviosTabuleiro(pc);
@@ -25,6 +25,7 @@ public class Main {
                 if (jogadas.getTurno()){
                     jogadas.realizarAtaque(jogador, pc);
                     jogadas.raizPrintTabuleiro(jogador,pc);
+                    jogadas.contarNaviosRestantes(jogador);
                 } else {
                     jogadas.realizarAtaque(pc, jogador);
                 }

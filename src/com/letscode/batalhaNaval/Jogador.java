@@ -1,11 +1,9 @@
 package com.letscode.batalhaNaval;
 
-import com.letscode.Tabuleiro;
-
 public class Jogador {
     private String nome;
     private Tabuleiro tabuleiro;
-    private int qtdeMaximaDeNavios;
+    private final int qtdeMaximaDeNavios;
     private int naviosRestantes;
     private boolean isBot;
 
@@ -31,7 +29,7 @@ public class Jogador {
 
     public void setNaviosRestantes(int naviosRestantes) { this.naviosRestantes = naviosRestantes; }
 
-    public boolean isBot() {
+    public boolean getIsBot() {
         return isBot;
     }
 }

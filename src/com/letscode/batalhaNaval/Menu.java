@@ -2,7 +2,7 @@ package com.letscode.batalhaNaval;
 
 import java.util.Scanner;
 
-public class Menu {
+public final class Menu {
     int[][] matrizTabuleiro = new int[10][10];
     int qteNavios = 10;
     boolean[] playersState = new boolean[]{true, true};
@@ -42,7 +42,6 @@ public class Menu {
         System.out.print("Qual tamanho do Tabuleiro deseja? (Default: 10) ");
         int squareSize = playerInput();
         this.matrizTabuleiro = new int[squareSize][squareSize];
-
         System.out.print("\n1 -> 1  vs PC\n" +
                            "2 -> PC vs PC\n");
         System.out.print("Selecione o modo de jogo: (Default: 1 vs PC) ");

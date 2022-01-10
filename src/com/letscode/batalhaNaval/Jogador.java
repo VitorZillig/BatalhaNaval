@@ -25,19 +25,7 @@ public class Jogador {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setTabuleiro(Tabuleiro tabuleiro) {
-        this.tabuleiro = tabuleiro;
-    }
-
     public int getQtdeMaximaDeNavios() { return qtdeMaximaDeNavios; }
-
-    public void setQtdeMaximaDeNavios(int qtdeMaximaDeNavios) {
-        this.qtdeMaximaDeNavios = qtdeMaximaDeNavios;
-    }
 
     public int getNaviosRestantes() { return naviosRestantes; }
 

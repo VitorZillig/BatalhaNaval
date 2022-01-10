@@ -9,13 +9,6 @@ public class Jogadas {
     Scanner sc = new Scanner(System.in);
     private boolean turno = true;
 
-    public String obterNomeJogador(){
-        String nomeJogador;
-        System.out.print("Informe seu nome: ");
-        nomeJogador = sc.nextLine();
-        return nomeJogador;
-    }
-
     public boolean getTurno(){ return this.turno; }
 
     public Tabuleiro alocarNaviosAleatoriamente(int qtdeMaximaDeNavios){

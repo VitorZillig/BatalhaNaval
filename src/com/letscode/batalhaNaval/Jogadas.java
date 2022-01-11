@@ -162,28 +162,31 @@ public class Jogadas {
         System.out.println(letraCabecalho);
     }
 
-    public StringBuilder formater(String nomeJogador, String delimiter, boolean loser){
-        StringBuilder sb = new StringBuilder(44);
+    public void formater(String nomeJogador, String delimiter, boolean loser, String beforeDelimiter){
+        int stringSize = 4*this.boardSize+4;
+        StringBuilder beforeAfter = new StringBuilder(stringSize);
+        beforeAfter.append(String.valueOf(beforeDelimiter).repeat(stringSize));
+        System.out.println(beforeAfter);
+
+        StringBuilder sb = new StringBuilder(stringSize);
         if (!loser) sb.append("WINNER ");
         else sb.append(String.valueOf(delimiter).repeat(Math.max(0,7)));
-        sb.append(String.valueOf(delimiter).repeat(Math.max(0, (44 - sb.length()*2 - nomeJogador.length() - 2)/2)));
+        sb.append(String.valueOf(delimiter).repeat(Math.max(0, (stringSize - sb.length()*2 - nomeJogador.length() - 2)/2)));
         sb.append(" ").append(nomeJogador).append(" ");
-        sb.append(String.valueOf(delimiter).repeat(Math.max(0, (44 - sb.length()-7))));
+        sb.append(String.valueOf(delimiter).repeat(Math.max(0, (stringSize - sb.length()-7))));
         if (!loser) sb.append(" WINNER");
         else sb.append((String.valueOf(delimiter).repeat(Math.max(0,7))));
-        return sb;
+        System.out.println(sb);
+
+        System.out.println(beforeAfter);
     }
 
     public void printTabuleiro(String nomeJogador, Tabuleiro tabuleiroRecebido, boolean loser){
 
         if (!loser){
-            System.out.println("********************************************");
-            System.out.println(formater(nomeJogador,"*",false));
-            System.out.println("********************************************");
+            formater(nomeJogador,"*",false,"*");
         } else {
-            System.out.println("--------------------------------------------");
-            System.out.println(formater(nomeJogador," ",true));
-            System.out.println("--------------------------------------------");
+            formater(nomeJogador," ",true,"-");
         }
 
         exibirInidiceColunas();

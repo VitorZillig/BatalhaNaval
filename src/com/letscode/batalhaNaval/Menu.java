@@ -2,7 +2,7 @@ package com.letscode.batalhaNaval;
 
 import java.util.Scanner;
 
-public final class Menu {
+public class Menu {
     int[][] matrizTabuleiro = new int[10][10];
     int qteNavios = 10;
     boolean[] playersState = new boolean[]{true, true};

@@ -5,9 +5,9 @@ import java.util.Scanner;
 
 
 public class Jogadas {
-    Scanner sc = new Scanner(System.in);
+    private Scanner sc = new Scanner(System.in);
     private boolean turno = true;
-    int boardSize;
+    private int boardSize;
 
     public Jogadas(int boradSize) {
         this.boardSize = boradSize;

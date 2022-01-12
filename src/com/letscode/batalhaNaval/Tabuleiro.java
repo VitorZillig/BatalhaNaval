@@ -1,4 +1,4 @@
-package com.letscode;
+package com.letscode.batalhaNaval;
 
 public class Tabuleiro {
     private int[][] matriz;

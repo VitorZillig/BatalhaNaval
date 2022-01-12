@@ -18,7 +18,6 @@ public class Jogadas {
     public Tabuleiro alocarNaviosAleatoriamente(int qtdeMaximaDeNavios){
         int qtdeRestanteNavios = qtdeMaximaDeNavios;
         int [][] novoTabuleiro = new int[this.boardSize][this.boardSize];
-        System.out.println(this.boardSize);
         Random numeroAleatorio = new Random();
         int x, y;
 
@@ -50,16 +49,16 @@ public class Jogadas {
         if (jogador.getIsBot()){
             jogador.getTabuleiro().setMatriz(alocarNaviosAleatoriamente(jogador.getQtdeMaximaDeNavios()));
         } else {
-            System.out.print(jogador.getNome() + " deseja que aloquemos pra você as peças no tabuleiro? (S|N)");
+            System.out.print(jogador.getNome() + " deseja que aloquemos pra você as peças no tabuleiro? (S|N) ");
             char opcao = Character.toUpperCase(sc.next().charAt(0));
             if(opcao=='S'){
                 jogador.getTabuleiro().setMatriz(alocarNaviosAleatoriamente(jogador.getQtdeMaximaDeNavios()));
             }else {
                 for (int i=0; i<jogador.getQtdeMaximaDeNavios(); i++){
-                    int[] posicao = receberPosicao("Favor informar posição para o " + (i+1) + "º navio: (Ex.: A03)");
+                    int[] posicao = receberPosicao("Favor informar posição para o " + (i+1) + "º navio: (Ex.: A03) ");
                     while(jogador.getTabuleiro().getMatriz()[posicao[0]][posicao[1]] == 1) {
                         System.out.println("Favor escolher uma posição que não esteja ocupada.");
-                        posicao = receberPosicao("Favor informar posição para o " + (i+1) + "º navio: (Ex.: A03)");
+                        posicao = receberPosicao("Favor informar posição para o " + (i+1) + "º navio: (Ex.: A03) ");
                     }
                     jogador.getTabuleiro().getMatriz()[posicao[0]][posicao[1]] = 1;
                 }
@@ -73,7 +72,8 @@ public class Jogadas {
         boolean posicaoOK = verificarEstruturaPosicao(pos);
         while(!posicaoOK){
             char lastLetter = (char) (64 + this.boardSize);
-            System.out.print("Favor informar posição válida (A - " + lastLetter + ") e (01 - "+ this.boardSize +"): ");
+            String lastNumber = this.boardSize >= 9 ? String.valueOf(this.boardSize) : "0"+this.boardSize;
+            System.out.print("Favor informar posição válida (A - " + lastLetter + ") e (01 - " + lastNumber + "): ");
             pos = sc.next();
             posicaoOK = verificarEstruturaPosicao(pos);
         }
@@ -141,12 +141,12 @@ public class Jogadas {
             }
             atacarNaPosicao(linha, coluna, jogador, jogador2);
         }else {
-            int[] pos =  receberPosicao("Favor informar posição para ataque: (Ex.: A03)");
+            int[] pos =  receberPosicao("Favor informar posição para ataque: (Ex.: A03) ");
             int[][] tabuleiroJogador = jogador.getTabuleiro().getMatriz();
             boolean flag = tabuleiroJogador[pos[0]][pos[1]] != 0 && tabuleiroJogador[pos[0]][pos[1]] != 1;
             while (flag){
                 System.out.println("Favor escolha uma posição não selecionada anteriormente!");
-                pos = receberPosicao("Favor informar posição para ataque: (Ex.: A03)");
+                pos = receberPosicao("Favor informar posição para ataque: (Ex.: A03) ");
                 flag = tabuleiroJogador[pos[0]][pos[1]] != 0 && tabuleiroJogador[pos[0]][pos[1]] != 1;
             }
             atacarNaPosicao(pos[0], pos[1], jogador, jogador2);
@@ -226,7 +226,8 @@ public class Jogadas {
 
     public void contarNaviosRestantes(Jogador jogador){
         System.out.println();
-        System.out.println("**** O adversário acertou "+(jogador.getQtdeMaximaDeNavios()-jogador.getNaviosRestantes())+" navios seus!****");
+        String text = jogador.getQtdeMaximaDeNavios() - jogador.getNaviosRestantes() == 1 ? " navio seu ******" : " navios seus ****";
+        System.out.println("**** O adversário acertou "+(jogador.getQtdeMaximaDeNavios()-jogador.getNaviosRestantes()) + text);
     }
 
     public void printRaizTabuleiro(Jogador jogador, Jogador jogador2){

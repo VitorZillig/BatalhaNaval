@@ -25,7 +25,6 @@ public class Main {
             while(jogador.getNaviosRestantes() != 0 && pc.getNaviosRestantes() != 0){
                 if (jogadas.getTurno()){
                     jogadas.realizarAtaque(jogador, pc);
-                    jogadas.contarNaviosRestantes(pc);
                     if (!jogador.getIsBot()) {
                         jogadas.printRaizTabuleiro(jogador, pc);
                     }

@@ -3,13 +3,13 @@ package com.letscode.batalhaNaval;
 import java.util.Scanner;
 
 public class Menu {
-    int[][] matrizTabuleiro = new int[10][10];
-    int qteNavios = 10;
-    boolean[] playersState = new boolean[]{true, true};
-    String[] playersName= new String[]{"Computador", "Computador"};
-    int gameMode = 2;
+    private int[][] matrizTabuleiro = new int[10][10];
+    private int qteNavios = 10;
+    private boolean[] playersState = new boolean[]{true, true};
+    private String[] playersName = new String[]{"Computador", "Computador"};
+    private int gameMode = 2;
 
-    Scanner sc =  new Scanner(System.in);
+    private Scanner sc =  new Scanner(System.in);
 
     public int[][] getMatrizTabuleiro() { return matrizTabuleiro; }
 

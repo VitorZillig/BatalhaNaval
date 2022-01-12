@@ -3,7 +3,7 @@ package com.letscode.batalhaNaval;
 public class Jogador {
     private String nome;
     private Tabuleiro tabuleiro;
-    private final int qtdeMaximaDeNavios;
+    private int qtdeMaximaDeNavios;
     private int naviosRestantes;
     private boolean isBot;
 
